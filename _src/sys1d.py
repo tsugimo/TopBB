@@ -22,8 +22,18 @@ class KitaevChain:
     # boundary condition
     self.bdc = self.tom['BDC']
 
+    # parity; False(0) = even, True(1) = Odd; For PBC and initial state
+    self.par = self.tom['PAR']
+
     # coupling const {'t1': **, 'D1': **, 'V1': **, 'mu': **}
     self.cpc = self.tom['CPC']
+
+    # make parity subspace
+    self.sbs = []
+    for i in range(2 ** self.lss):
+      if bin(i)[2:].count('1') % 2 == self.par:
+        self.sbs.append(i)
+
 
   def __str__(self):
     txt = "[KitaevChain]\n"
@@ -31,11 +41,13 @@ class KitaevChain:
     txt += f"  LSS = {self.lss}\n"
     txt += "# Boundary condition\n"
     txt += f"  BDC = {self.bdc}\n"
-    txt += "Coupling constatnts\n"
+    txt += "# parity\n"
+    txt += f"  PAR = {self.par}\n"
+    txt += "# Coupling constatnts\n"
     txt += f"  CPC = {self.cpc}\n"
     return txt
   
-  def ham(self, par: bool) -> dict:
+  def ham(self) -> dict:
     # temporary use
     lss = self.lss
     t1 = self.cpc['t1']
@@ -57,39 +69,52 @@ class KitaevChain:
       # Hz terms
       htom['HAM']['TRM'].append([-mu, [n], [3]])
 
-    # par is parity; False(0) = even, True(1) = Odd
     if self.bdc == 'PBC':
-      if par == None: # parity is NOT selected
-        # X X terms
-        htom['HAM']['TRM'].append([((-1) ** (lss % 2)) * 2 * (t1 + D1), list(range(lss)), [2] + ([1] * (lss-2)) + [2]])
-        # Y Y terms
-        htom['HAM']['TRM'].append([((-1) ** (lss % 2)) * 2 * (t1 - D1), list(range(lss)), [1] + ([2] * (lss-2)) + [1]])
-        # Z Z term
-        htom['HAM']['TRM'].append([-V1, [0, lss-1], [3, 3]])
-      elif par == False: # even parity
+      if self.par == False: # even parity
         # X X terms
         htom['HAM']['TRM'].append([2 * (t1 + D1), [0, lss-1], [1, 1]])
         # Y Y terms
         htom['HAM']['TRM'].append([2 * (t1 - D1), [0, lss-1], [2, 2]])
-        # Z Z term
-        htom['HAM']['TRM'].append([-V1, [0, lss-1], [3, 3]])
       else: # odd parity
         # X X terms
         htom['HAM']['TRM'].append([-2 * (t1 + D1), [0, lss-1], [1, 1]])
         # Y Y terms
         htom['HAM']['TRM'].append([-2 * (t1 - D1), [0, lss-1], [2, 2]])
-        # Z Z term
-        htom['HAM']['TRM'].append([-V1, [0, lss-1], [3, 3]])
+
+      # Z Z term NOT depend on parity
+      htom['HAM']['TRM'].append([-V1, [0, lss-1], [3, 3]])
 
     return htom 
   
 
-  def ans(self, mly: int = 1, qct: str = "BrickWall", par: bool = False, ins: int = None) -> dict:
+  def ans(self, mly: int = 1, qct: str = "Sequential", ins: int = None) -> dict:
     # temporary use
     lss = self.lss
 
     atom: dict = {'ANS': {}}
-    atom['ANS']['NQB'] = lss
-    
+    atom['ANS']['LSS'] = lss
+    atom['ANS']['MLY'] = mly
+
+    if ins == None:
+      ins = self.par
+    atom['ANS']['INS'] = ins
+
+    atom['ANS']['GTL'] = []
+    if qct == 'Sequential':
+      for n in range(lss-1):
+        for s in range(3):
+          atom['ANS']['GTL'].append(['P', '*', [n, n+1], [s, s]])
+
+      if self.bdc == 'PBC':
+        for s in range(3):
+          atom['ANS']['GTL'].append(['P', '*', [0, lss-1], [s, s]])
+
+      for n in range(lss):
+        atom['ANS']['GTL'].append(['P', '*', [n], [3]])
+
+    atom['ANS']['GTI'] = []
+    atom['ANS']['GTF'] = []
+
+
     return atom 
 

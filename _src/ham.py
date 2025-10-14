@@ -26,7 +26,7 @@ class HAM:
     self.trm = self.tom['TRM']
 
     # for exact diag.
-    self.eig = None
+    self.eig = [[]]
 
     self.ope = qulacs.Observable(self.lss)
     pau = ["I", "X", "Y", "Z"]
@@ -36,9 +36,9 @@ class HAM:
         trm += pau[o] + " " + str(s) + " "
       self.ope.add_operator(cpl, trm)
 
-    txt = "[InitHAM]\n"
-    txt += f"  SystemSize = {self.lss}\n"
-    txt += f"  #(terms) = {len(self.trm)}\n"
+    txt = "[IniHAM]\n"
+    txt += f"  SysSiz = {self.lss}\n"
+    txt += f"  NTrm = {len(self.trm)}\n"
     print(txt)
 
   def __str__(self):
@@ -50,12 +50,14 @@ class HAM:
     txt += f"  TRM = {self.trm}\n"
     return txt
   
-  def diag(self, omod = 1, k = 1, **args) -> tuple:
-    A = self.ope.get_matrix()
-    self.eig = sparse.linalg.eigsh(A, k, **args)
+  def diag(self, omod = 1, k = 1, sbs = None, **args) -> tuple:
+
+    if len(self.eig) < k:
+      A = self.ope.get_matrix()
+      self.eig = sparse.linalg.eigsh(A, k, which='SA', **args)
 
     if omod:
-      print("[Eigenenergy]")
+      print("[EigEne]")
       for i, en in enumerate(self.eig[0]):
         print(f"  {i} = {en}")
       print('')

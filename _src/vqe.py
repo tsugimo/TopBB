@@ -6,12 +6,12 @@ import numpy
 
 from scipy import optimize
 
-from ham import HAM
-from ans import ANS
+from .ham import HAM
+from .ans import ANS
 
 ### class of ansatz
 class VQE:
-  def __init__(self, ipara: str | dict, iham: str | dict | HAM = None, ians: str | dict | ANS = None, ikeys: list = ['VQE','HAM','ANS']): # ipara is toml-file name or dict
+  def __init__(self, ipara: str | dict, iham: str | dict | HAM = None, ians: str | dict | ANS = None, ikeys: list = ['VQE','HAM','ANS']):
 
     tom: dict = None # To avoid confusing scope
     if type(ipara) is str: # input form file 
@@ -48,7 +48,7 @@ class VQE:
       self.ans = copy.deepcopy(ians) # not changed in vqe
 
     # System size consistency
-    assert self.ham.lss == self.ans.nqb, f"ERROR: System size is NOT consistent. <class VQE>"
+    assert self.ham.lss == self.ans.lss, f"ERROR: System size is NOT consistent. <class VQE>"
 
     self.tom = tom[ikeys[0]]
     # maximal # of minimize ite.
@@ -60,10 +60,10 @@ class VQE:
     # energy trajectory in bfgs
     self.etb = []
 
-    txt = "[InitVQE]\n"
-    txt += f"  Max#OfIterations = {self.mit}\n"
-    txt += f"  Tics#inIteration = {self.tit}\n"
-    txt += f"  TolerantError = {self.tol}\n"
+    txt = "[IniVQE]\n"
+    txt += f"  MaxNIte = {self.mit}\n"
+    txt += f"  TicNIte = {self.tit}\n"
+    txt += f"  TolErr = {self.tol}\n"
     print(txt)
 
 
@@ -89,7 +89,6 @@ class VQE:
   # calc infidelity of eigenstate b/w VQE & ED
   def ifid(self) -> float:
     self.ham.diag(omod = 0, k = 1)
-
     return 1.0 - abs(numpy.vdot(self.ans.get_state().get_vector(), numpy.transpose(self.ham.eig[1])[0]))
 
 
@@ -97,7 +96,7 @@ class VQE:
     print("[BFGS]")
     par = self.ans.get_par()
     ene = self.cale(par)
-    print(f"  [BFGS.Input]")
+    print(f"  [BFGS.In]")
     print(f"    Ene = {ene}")
     print(f"    Par = {par}")      
 
@@ -117,15 +116,15 @@ class VQE:
       res = optimize.minimize(self.cale, npar, **min_args)
       npar = res.x
       ene = res.fun 
-      print(f"  [BFGS.Step{n}]")
+      print(f"  [BFGS.Stp{n}]")
       print(f"    Ene = {ene}")
       print(f"    Dif = {res.fun - ene}")
 
     par = npar.tolist()
-    print(f"  [BFGS.Result]")
-    print(f"    Step# = {n}")
+    print(f"  [BFGS.Res]")
+    print(f"    Stp = {n}")
     print(f"    Ene = {ene}")
-    print(f"    Inf = {self.ifid()}")     
+    #print(f"    Inf = {self.ifid()}")     
     print(f"    Par = {par}")
     print("")
 

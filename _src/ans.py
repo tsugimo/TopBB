@@ -19,8 +19,8 @@ class ANS:
     else:  # input from dict
       self.tom = ipara[ikey]
 
-    # #(qubits)
-    self.nqb = self.tom['NQB']
+    # system size
+    self.lss = self.tom['LSS']
 
     # initial (classical) state; 2-bit string
     self.ins = self.tom['INS']
@@ -43,36 +43,36 @@ class ANS:
 
     # make circuit
     random.seed()
-    self.aqc = qulacs.ParametricQuantumCircuit(self.nqb)
+    self.aqc = qulacs.ParametricQuantumCircuit(self.lss)
     for g in self.gta:
-      if g[0] == "F":
+      if g[0] == 'F':
         self.aqc.add_multi_Pauli_rotation_gate(g[2],g[3],g[1])
       else: # parametric gate
-        if g[1] == "*": # random initial angle
+        if g[1] == '*': # random initial angle
           self.aqc.add_parametric_multi_Pauli_rotation_gate(g[2],g[3],random.uniform(0.0, 4 * math.pi))
         else:
           self.aqc.add_parametric_multi_Pauli_rotation_gate(g[2],g[3],g[1])
 
-    txt = "[InitANS]\n"
-    txt += f"  #(qubits) = {self.nqb}\n"
-    txt += f"  InitialState = 0b{self.ins:0{self.nqb}b}\n"
-    txt += f"  #(Layers) = {self.mly}\n"
-    txt += f"  #(LayeredGates) = {len(gtl)}\n"
-    txt += f"  #(InitialGates) = {len(gti)}\n"
-    txt += f"  #(FinalGates) = {len(gtf)}\n"
-    txt += f"  #(Parameters) = {self.aqc.get_parameter_count()}\n"
+    txt = "[IniANS]\n"
+    txt += f"  NQub = {self.lss}\n"
+    txt += f"  NLay = {self.mly}\n"
+    txt += f"  NLayGat = {len(gtl)}\n"
+    txt += f"  NIniGat = {len(gti)}\n"
+    txt += f"  NFinGat = {len(gtf)}\n"
+    txt += f"  NPar = {self.aqc.get_parameter_count()}\n"
+    txt += f"  IniStt = 0b{self.ins:0{self.lss}b}\n"
     print(txt)
 
   def __str__(self):
     self.aqc2gta()
 
     txt = "[ANS]\n"
-    txt += "# #(qubits)\n"
-    txt += f"  NQB = {self.nqb}\n"
+    txt += "# system size\n"
+    txt += f"  LSS = {self.lss}\n"
     txt += "# initial state (2-bit repr.)\n"
-    txt += f"  INS = 0b{self.ins:0{self.nqb}b}\n"
-    txt += "# #(layers)\n"
-    txt += f"  MLY = 1\n"
+    txt += f"  INS = 0b{self.ins:0{self.lss}b}\n"
+    txt += "# num layers\n"
+    txt += f"  MLY =  {self.mly}\n"
     txt += "# set of layered gates (1 layer)\n"
     txt += f"  GTL = {self.gta}\n"
     txt += "# set of initial gates; not repeated\n"
@@ -101,13 +101,13 @@ class ANS:
     # set current parrams. to gta from aqc
     i = 0
     for g in self.gta:
-      if g[0] == "P":
+      if g[0] == 'P':
         g[1] = self.aqc.get_parameter(i)
         i += 1
 
   def get_state(self) -> qulacs.QuantumState:
     # set initial state
-    st = qulacs.QuantumState(self.nqb)
+    st = qulacs.QuantumState(self.lss)
     st.set_computational_basis(self.ins)
 
     # apply gate & get exp. value

@@ -35,11 +35,11 @@ class TTE:
     # #(time steps)
     self.nts = int(self.dte / self.tte) 
 
-    txt = "[InitTTE]\n"
-    txt += f"  DulationOfTimeEvolution = {self.dte}\n"
-    txt += f"  TicsOfTimeEvolution = {self.tte}\n"
-    txt += f"  #(TimeSteps) = {self.nts}\n"
-    txt += f"  OrderOfApplyingTerms = {self.oat}\n"
+    txt = "[IniTTE]\n"
+    txt += f"  DulTimEvo = {self.dte}\n"
+    txt += f"  TicTimEvo = {self.tte}\n"
+    txt += f"  NTimStp = {self.nts}\n"
+    txt += f"  OrdAppTrm = {self.oat}\n"
     print(txt)
 
 
