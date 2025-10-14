@@ -1,12 +1,23 @@
 [KitaevChain]
 # system size
-LSS = 12
-
+LSS = 8
+# boundary condition
 BDC = 'OBC'
+# parity; 0: even, 1: odd (bool)
+PAR = 0
 
+# coupling constants
 [KitaevChain.CPC]
-  t1 = 1.0
-  D1 = 0.3
-  V1 = 0.1
-  mu = 0.05
+t1 = 1.0
+D1 = 0.3
+V1 = 0.1
+mu = 0.05
+
+[VQE]
+# maximal # of minimize ite.
+MIT = 10
+# tics # in each minimize ite. 
+TIT = 100
+# tolerence error
+TOL = 1.0e-6 
 
