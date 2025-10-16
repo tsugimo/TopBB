@@ -54,6 +54,13 @@ class HAM:
 
     if len(self.eig) < k:
       A = self.ope.get_matrix()
+      # restricting to subspace
+      if sbs != None:
+        dsbs = list(set(range(2**self.lss)) - set(sbs))
+        B = A.tolil()
+        B[dsbs,:] = 0
+        A = B.tocsr()
+      # diag  
       self.eig = sparse.linalg.eigsh(A, k, which='SA', **args)
 
     if omod:
