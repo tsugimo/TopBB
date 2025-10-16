@@ -3,17 +3,17 @@
 現在、VQEと動的相関関数の計算ができるようになっています。
 今後、より発展的なアルゴリズムを使いしていく予定です。
 
-# Usage
+## Usage
 - para.toml を入力ファイルとして使います。記述方法は、以下に示します。
 - main.py を python で実行します。python 3.9 以降を推奨します。
 - ライブラリとして、qulacs および scipy など、可視化に matplotlib などを使用します。
 
-# Output
+## Output
 - 厳密対角化によって得られた基底状態エネルギーとの差分を、VQEステップに対してプロットした図を返す。
 - 標準出力として、詳細なステップごとの結果と、最終的に得られたアンザツパラメータを返す。
 
-# Example
-## (Interacting) Kitaev chani model
+## Example
+### para.toml for (Interacting) Kitaev chani model
 
 ```toml
 [KitaevChain]
@@ -44,5 +44,5 @@ TIT = 100
 TOL = 1.0e-6 
 ```
 
-## Result
+### Result of the above input
 <img width="800" height="600" alt="Figure1" src="https://github.com/user-attachments/assets/a3d3957a-6527-4ea4-ae58-ce1482a6b57a" />
