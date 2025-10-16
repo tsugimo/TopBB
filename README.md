@@ -5,7 +5,8 @@
 
 ## Usage
 - para.toml を入力ファイルとして使います。記述方法は、以下に示します。
-- main.py を python で実行します。python 3.9 以降を推奨します。
+- main.py を python で実行します。python 3.11 以降を推奨します。
+ (3.10 以前のバージョンに関しては、toml をインストールしてください。)
  $ python main.py
 - ライブラリとして、qulacs および scipy など、可視化に matplotlib などを使用します。
 
