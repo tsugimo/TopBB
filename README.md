@@ -8,6 +8,11 @@
 - main.py を python で実行します。python 3.9 以降を推奨します。
 - ライブラリとして、qulacs および scipy など、可視化に matplotlib などを使用します。
 
+# Output
+- 厳密対角化によって得られた基底状態エネルギーとの差分を、VQEステップに対してプロットした図を返す。
+- 標準出力として、詳細なステップごとの結果と、最終的に得られたアンザツパラメータを返す。
+
+# Example
 ## (Interacting) Kitaev chani model
 
 ```toml
@@ -38,3 +43,6 @@ TIT = 100
 # tolerence error
 TOL = 1.0e-6 
 ```
+
+## Result
+<img width="800" height="600" alt="Figure1" src="https://github.com/user-attachments/assets/a3d3957a-6527-4ea4-ae58-ce1482a6b57a" />
