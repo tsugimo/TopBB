@@ -6,6 +6,7 @@
 ## Usage
 - para.toml を入力ファイルとして使います。記述方法は、以下に示します。
 - main.py を python で実行します。python 3.9 以降を推奨します。
+ $ python main.py
 - ライブラリとして、qulacs および scipy など、可視化に matplotlib などを使用します。
 
 ## Output
