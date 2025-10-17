@@ -53,7 +53,7 @@ from _src.sys1d import KitaevChain
 from _src.vqe import VQE
 from matplotlib import pyplot
 
-# read-in Ham. paras of Kitaev chain
+# read-in Ham. para of Kitaev chain
 kc = KitaevChain("para.toml")
 print(kc)
 
