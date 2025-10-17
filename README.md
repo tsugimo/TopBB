@@ -80,5 +80,5 @@ pyplot.show()
 print(vqe.etb)
 ```
 
-### Result　of VQE
+### Result of VQE
 <img width="800" height="600" alt="Figure1" src="https://github.com/user-attachments/assets/a3d3957a-6527-4ea4-ae58-ce1482a6b57a" />
