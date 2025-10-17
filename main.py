@@ -6,17 +6,22 @@ from matplotlib import pyplot
 
 if __name__ == "__main__":
 
+  # read-in Ham. paras of Kitaev chain
   kc = KitaevChain("para.toml")
   print(kc)
 
+  # prep. VQE 
   vqe = VQE("para.toml", kc.ham(), kc.ans(mly=2))
   print(vqe)
 
+  # exact diag. (option)
   vqe.ham.diag(omod=1,k=3)
 
+  # exec. VQE
   vqe.bfgs()
   print(vqe.ans)
 
+  # plot VQE convergence
   pyplot.figure(figsize=(8, 6))
   ax = pyplot.gca()
   ax.set_title('Energy convergence in VQE')
