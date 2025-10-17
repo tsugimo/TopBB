@@ -15,7 +15,7 @@
 - 標準出力として、詳細なステップごとの結果と、最終的に得られたアンザツパラメータを返す。
 
 ## Example
-### para.toml for (Interacting) Kitaev chani model
+### para.toml for (Interacting) Kitaev chain model
 
 ```toml
 [KitaevChain]
@@ -46,7 +46,7 @@ TIT = 100
 TOL = 1.0e-6 
 ```
 
-### main.py for (Interacting) Kitaev chani model
+### main.py for (Interacting) Kitaev chain model
 
 ```python
 from _src.sys1d import KitaevChain
